@@ -1,0 +1,10 @@
+.waveform {
+  margin-bottom: 10px;
+  /* background-color: green; */
+}
+
+.muteButtonActivated {
+  color: red;
+  border-color: red;
+}
+

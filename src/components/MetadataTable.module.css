@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+.metadataTable {
+  /* background:red; */
+  font-family: 'Roboto Mono', monospace;
+  text-align: left;
+  margin-bottom:4em;
+}
+
+.entry {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.metadataTag {
+  font-weight: bold;
+  background-color: #ccc;
+}
+
+.disabled {
+  opacity: 0.3;
+}

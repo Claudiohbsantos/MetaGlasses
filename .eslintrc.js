@@ -14,6 +14,7 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     curly: ['error', 'multi-line'],
+    'sonarjs/cognitive-complexity': 'warn'
   },
   parserOptions: {
     "ecmaVersion": 2018,

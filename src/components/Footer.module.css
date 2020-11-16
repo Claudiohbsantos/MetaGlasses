@@ -1,0 +1,9 @@
+.footer {
+  position:fixed;
+  bottom:0;
+  left:50%;
+  margin-left: -100px;
+  width: 200px;
+  font-size: small;
+  height: 2em;
+}

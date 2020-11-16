@@ -10,10 +10,18 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/smpte-timecode": "^1.2.1",
+    "@types/wavesurfer.js": "^3.3.1",
+    "@types/xml2js": "^0.4.5",
+    "music-metadata-browser": "^2.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "typescript": "~3.7.2"
+    "smpte-timecode": "^1.2.3",
+    "typescript": "~3.7.2",
+    "wavefile": "^11.0.0",
+    "wavesurfer.js": "^4.0.1",
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -36,6 +44,8 @@
   "devDependencies": {
     "@commitlint/cli": "^9.1.2",
     "@commitlint/config-conventional": "^9.1.2",
+    "@types/reactstrap": "^8.5.1",
+    "bootstrap": "^4.5.2",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^23.20.0",
@@ -43,6 +53,7 @@
     "eslint-plugin-sonarjs": "^0.5.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.13",
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.1",
+    "reactstrap": "^8.5.1"
   }
 }
