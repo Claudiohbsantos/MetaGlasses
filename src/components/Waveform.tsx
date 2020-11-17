@@ -9,7 +9,6 @@ type Props = {
   channelNum?: number
   audioFile?: File
   setWaveformReadiness: (isReady: boolean) => void
-  handleDurationChange: (duration: number | undefined) => void
 }
 
 type State = {
@@ -61,12 +60,10 @@ export class Waveform extends React.Component<Props, State> {
       this.wavesurfer.on('ready', (): void => {
         this.connectChannelMixer()
         this.props.setWaveformReadiness(true)
-        this.props.handleDurationChange(this.wavesurfer?.getDuration())
       })
 
       this.wavesurfer.on('destroy', (): void => {
         this.props.setWaveformReadiness(false)
-        this.props.handleDurationChange(undefined)
       })
 
       this.wavesurfer.on('play', (): void => {

@@ -28,7 +28,6 @@ class App extends React.Component<Props, State> {
   constructor(props: {}) {
     super(props)
     this.setWaveformReadiness = this.setWaveformReadiness.bind(this)
-    this.handleDurationChange = this.handleDurationChange.bind(this)
     this.state = { loading: false, metadata: {}, waveformIsReady: false }
   }
 
@@ -44,12 +43,6 @@ class App extends React.Component<Props, State> {
         this.finishLoadingIfWaveformReady()
       }
     }, 500)
-  }
-
-  handleDurationChange(duration: number | undefined): void {
-    this.setState({
-      metadata: { ...this.state.metadata, ...{ duration } },
-    })
   }
 
   handleFileSelected = (evt: Event): void => {
@@ -68,6 +61,7 @@ class App extends React.Component<Props, State> {
               ...cleanBext(data.bext),
               ...cleaniXML(data.ixml),
               ...cleanFile(data.file),
+              ...data.media,
             },
           })
           this.finishLoadingIfWaveformReady()
@@ -91,7 +85,6 @@ class App extends React.Component<Props, State> {
               audioFile={this.state.audioFile}
               channelNum={this.state.metadata.channelNum}
               setWaveformReadiness={this.setWaveformReadiness}
-              handleDurationChange={this.handleDurationChange}
             />
             <MetadataTable metadata={this.state.metadata} />
             <Footer />

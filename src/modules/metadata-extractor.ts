@@ -5,7 +5,7 @@ export function getWavMetadata(file: File): Promise<Record<string, any>> {
   return new Promise((resolve, reject) => {
     readFileDataURL(file)
       .then(readWavfromDataURI)
-      .then(peek)
+      // .then(peek)
       .then((wav: WaveFile) =>
         Promise.all([
           getiXML(wav),
@@ -32,7 +32,7 @@ function getDuration(file: File): Record<string, any> {
     const url = URL.createObjectURL(file)
     const audioEl = document.createElement('audio')
     audioEl.addEventListener('loadedmetadata', () => {
-      resolve(audioEl.duration)
+      resolve({duration: audioEl.duration})
     })
     audioEl.addEventListener('error', reject)
     audioEl.src = url
