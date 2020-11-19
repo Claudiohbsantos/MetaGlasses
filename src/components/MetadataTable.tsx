@@ -79,9 +79,6 @@ class MetadataTable extends React.Component<{ metadata: BWFMetadata }, MetadataT
             {entry('Timecode start', md.timecode)}
             {entry('Userbits', md.userbits)}
           </Row>
-          <Row>
-            {entry('Tracks', md.tracks?.map((t) => `${t.interleaveChannel}:${t.recorderChannel}:${t.name}`).join('\n'))}
-          </Row>
           <Row>{entry('Circled', formCircledValue(md.circled))}</Row>
           <Row>{entry('Notes', md.note)}</Row>
         </Container>
