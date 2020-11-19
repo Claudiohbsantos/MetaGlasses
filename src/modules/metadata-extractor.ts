@@ -21,7 +21,7 @@ export function getWavMetadata(file: File): Promise<Record<string, any>> {
           media: values[4],
         }))
       )
-      .then(peek)
+      // .then(peek)
       .then(resolve)
       .catch(reject)
   })
@@ -32,7 +32,7 @@ function getDuration(file: File): Record<string, any> {
     const url = URL.createObjectURL(file)
     const audioEl = document.createElement('audio')
     audioEl.addEventListener('loadedmetadata', () => {
-      resolve({duration: audioEl.duration})
+      resolve({ duration: audioEl.duration })
     })
     audioEl.addEventListener('error', reject)
     audioEl.src = url
@@ -95,7 +95,7 @@ function readFileDataURL(file: File): Promise<string> {
   })
 }
 
-function peek<T>(x: T): T {
-  console.log(x)
-  return x
-}
+// function peek<T>(x: T): T {
+//   console.log(x)
+//   return x
+// }

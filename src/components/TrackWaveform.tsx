@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Button, Container, UncontrolledTooltip } from 'reactstrap'
 import WaveSurfer from 'wavesurfer.js'
@@ -6,9 +6,12 @@ import WaveSurfer from 'wavesurfer.js'
 import style from './Waveform.module.css'
 
 type Props = {
-  channelNum?: number
-  audioFile?: File
-  setWaveformReadiness: (isReady: boolean) => void
+  channel: number
+  channelNum: number
+  audioFile: File
+  playHandler: (instance: WaveSurfer) => void
+  seekHandler: (pos: number) => void
+  players: WaveSurfer[]
 }
 
 type State = {
@@ -16,11 +19,17 @@ type State = {
   channelGain: GainNode[]
   mutes: Set<number>
 }
-export class Waveform extends React.Component<Props, State> {
+
+const range = (start: number, n: number): number[] => Array.from(Array(n), (_, i) => i + start)
+const otherChannels = (nChannels: number, chI: number): number[] =>
+  range(0, nChannels).filter((n) => n !== chI - 1)
+
+export class TrackWaveform extends React.Component<Props, State> {
   wavesurfer: WaveSurfer | undefined
   constructor(props: Props) {
     super(props)
     this.state = { isPlaying: false, channelGain: [], mutes: new Set() }
+    this.seekAll = this.seekAll.bind(this)
   }
 
   connectChannelMixer(): void {
@@ -44,16 +53,26 @@ export class Waveform extends React.Component<Props, State> {
     this.setState({ channelGain: gainNodes })
   }
 
+  seekAll(e: SyntheticEvent): void {
+    const el = e as any
+    const rect = el.target.getBoundingClientRect()
+    const x = el.clientX - rect.left
+
+    this.props.seekHandler(x / rect.width)
+  }
+
   componentDidMount(): void {
     if (this.props.audioFile) {
       this.wavesurfer = WaveSurfer.create({
-        container: '#waveform',
+        container: `#waveform-${this.props.channel}`,
         normalize: true,
         splitChannels: true,
         splitChannelsOptions: {
           relativeNormalization: true,
+          filterChannels: otherChannels(this.props.channelNum, this.props.channel),
         },
         waveColor: '#777',
+        interact: false,
         // barWidth: 1,
         height: 60,
         responsive: true,
@@ -62,11 +81,7 @@ export class Waveform extends React.Component<Props, State> {
 
       this.wavesurfer.on('ready', (): void => {
         this.connectChannelMixer()
-        this.props.setWaveformReadiness(true)
-      })
-
-      this.wavesurfer.on('destroy', (): void => {
-        this.props.setWaveformReadiness(false)
+        this.muteHidden()
       })
 
       this.wavesurfer.on('play', (): void => {
@@ -77,76 +92,32 @@ export class Waveform extends React.Component<Props, State> {
         this.setState({ isPlaying: false })
       })
 
+      this.wavesurfer.setDisabledEventEmissions(['seek', 'interaction'])
+
+      this.props.players.push(this.wavesurfer)
+
       this.wavesurfer.loadBlob(this.props.audioFile)
     }
   }
 
-  updateGains(): void {
+  muteHidden(): void {
     this.state.channelGain.forEach((chGain, chI) => {
-      chGain.gain.value = this.state.mutes.has(chI) ? 0 : 1
+      chGain.gain.value = chI !== this.props.channel - 1 ? 0 : 1
     })
-  }
-
-  muteChannel(ch: number): void {
-    if (this.state.mutes.has(ch)) {
-      const newSet = new Set(this.state.mutes)
-      newSet.delete(ch)
-      this.setState({ mutes: newSet }, this.updateGains)
-    } else {
-      this.setState({ mutes: new Set(this.state.mutes).add(ch) }, this.updateGains)
-    }
   }
 
   componentWillUnmount(): void {
     this.wavesurfer?.destroy()
   }
 
-  renderPlayButton(): JSX.Element | undefined {
-    if (this.wavesurfer) {
-      return (
-        <Button
-          outline
-          size="sm"
-          color="secondary"
-          onClick={(): void => {
-            this.wavesurfer?.playPause()
-          }}
-        >
-          {this.state.isPlaying ? 'pause' : 'play'}
-        </Button>
-      )
-    }
-  }
-
-  renderMuteButtons(): JSX.Element[] | undefined {
-    if (!this.wavesurfer) return
-
-    return this.state.channelGain.map((_, i) => {
-      return (
-        <span key={i.toString()}>
-          <Button
-            id={'mute-' + i}
-            size="sm"
-            outline
-            onClick={() => this.muteChannel(i)}
-            className={this.state.mutes.has(i) ? style.muteButtonActivated : ''}
-          >
-            M
-          </Button>
-          <UncontrolledTooltip placement="bottom" target={'mute-' + i}>
-            Mute channel {i + 1}
-          </UncontrolledTooltip>
-        </span>
-      )
-    })
-  }
-
   render(): JSX.Element | null {
     return (
       <Container>
-        <div id="waveform" className={[style.waveform].join(' ')} />
-        {this.renderPlayButton()}
-        {this.renderMuteButtons()}
+        <div
+          id={`waveform-${this.props.channel}`}
+          className={[style.waveform].join(' ')}
+          onClick={this.seekAll}
+        />
       </Container>
     )
   }

@@ -4,9 +4,10 @@ import './App.css'
 import Header from './components/Header'
 import Loader from './components/Loader'
 import MetadataTable from './components/MetadataTable'
+import Tracks from './components/Tracks'
 import { Waveform } from './components/Waveform'
 import Footer from './components/Footer'
-import ErrorModal from './components/ErrorModal'
+// import ErrorModal from './components/ErrorModal'
 import { Container, Row, Col } from 'reactstrap'
 import { getWavMetadata } from './modules/metadata-extractor'
 import { cleaniXML, cleanBext, cleanFile, cleanFmt, BWFMetadata } from './modules/cleanMetadata'
@@ -52,9 +53,10 @@ class App extends React.Component<Props, State> {
     if (!isValidAudioFile(file)) {
       alert(`${file.name} is not a valid sound file. Please pick a .wav file for analysis.`)
     } else {
-      this.setState({ audioFile: file, loading: true })
+      this.setState({ loading: true })
       getWavMetadata(file)
         .then((data) => {
+          console.log(cleanFmt(data.fmt))
           this.setState({
             metadata: {
               ...cleanFmt(data.fmt),
@@ -62,7 +64,12 @@ class App extends React.Component<Props, State> {
               ...cleaniXML(data.ixml),
               ...cleanFile(data.file),
               ...data.media,
+              tracks:
+                cleaniXML(data.ixml).tracks?.length === 0
+                  ? cleanFmt(data.fmt).tracks
+                  : cleaniXML(data.ixml).tracks,
             },
+            audioFile: file,
           })
           this.finishLoadingIfWaveformReady()
         })
@@ -80,13 +87,8 @@ class App extends React.Component<Props, State> {
           <Col sm="12" md={{ size: 8, offset: 2 }} className="text-center">
             <Header />
             <Loader handleFileSelected={this.handleFileSelected} loading={this.state.loading} />
-            <Waveform
-              key={this.state.audioFile?.name}
-              audioFile={this.state.audioFile}
-              channelNum={this.state.metadata.channelNum}
-              setWaveformReadiness={this.setWaveformReadiness}
-            />
-            <MetadataTable metadata={this.state.metadata} />
+            <Tracks tracks={this.state.metadata.tracks} audioFile={this.state.audioFile} />
+            {/* <MetadataTable metadata={this.state.metadata} /> */}
             <Footer />
             {/* <ErrorModal buttonLabel="Hello" className="" /> */}
           </Col>

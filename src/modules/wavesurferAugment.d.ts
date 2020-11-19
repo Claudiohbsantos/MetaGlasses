@@ -1,11 +1,13 @@
 import * as WaveSurfer from 'wavesurfer.js'
 
 declare module 'wavesurfer.js' {
+  // TODO: Extend seekTo method
   interface WaveSurferBackend {
     ac: AudioContext
     setFilters(filters: AudioNode[]): void
     buffer: AudioBuffer
   }
+
   interface WaveSurferParams {
     splitChannelsOptions?: {
       overlay?: boolean
@@ -17,7 +19,8 @@ declare module 'wavesurfer.js' {
           backgroundColor?: string
         }
       >
-      filterChannels: number[]
+      filterChannels?: number[]
+      relativeNormalization?: boolean
     }
   }
 }

@@ -1,0 +1,26 @@
+.btn {
+  border:none;
+  background:none;
+  font-weight: bold;
+  color:#555;
+}
+
+.btn:focus {
+  outline-color: #555;
+}
+
+.btn-muted {
+  color: #f55;
+}
+
+.btn-muted:focus {
+  outline-color: #f55;
+}
+
+.btn-soloed {
+  color:#55f;
+}
+
+.btn-soloed:focus {
+  outline-color: #55f;
+}

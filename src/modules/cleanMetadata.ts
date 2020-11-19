@@ -6,7 +6,7 @@ type TCRate = 23.976 | 24 | 25 | 29.97 | 30 | 50 | 59.94 | 60 | undefined
 export type TrackMetadata = {
   recorderChannel?: string
   name?: string
-  interleaveChannel?: string
+  interleaveChannel: string
 }
 
 export type BWFMetadata = {
@@ -36,6 +36,9 @@ export function cleanFmt(fmt: Record<string, any>): Partial<BWFMetadata> {
     channelNum: fmt.numChannels,
     bitDepth: fmt.bitsPerSample,
     sampleRate: fmt.sampleRate,
+    tracks: Array.from(Array(fmt.numChannels), (_, i) => i + 1).map((ch) => ({
+      interleaveChannel: ch.toString(),
+    })),
   })
 }
 
