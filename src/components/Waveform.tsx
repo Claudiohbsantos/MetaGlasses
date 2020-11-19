@@ -48,8 +48,11 @@ export class Waveform extends React.Component<Props, State> {
     if (this.props.audioFile) {
       this.wavesurfer = WaveSurfer.create({
         container: '#waveform',
-        // normalize: true,
+        normalize: true,
         splitChannels: true,
+        splitChannelsOptions: {
+          relativeNormalization: true,
+        },
         waveColor: '#777',
         // barWidth: 1,
         height: 60,
