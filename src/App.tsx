@@ -5,7 +5,6 @@ import Header from './components/Header'
 import Loader from './components/Loader'
 import MetadataTable from './components/MetadataTable'
 import Tracks from './components/Tracks'
-import { Waveform } from './components/Waveform'
 import Footer from './components/Footer'
 // import ErrorModal from './components/ErrorModal'
 import { Container, Row, Col } from 'reactstrap'
@@ -88,7 +87,7 @@ class App extends React.Component<Props, State> {
             <Header />
             <Loader handleFileSelected={this.handleFileSelected} loading={this.state.loading} />
             <Tracks tracks={this.state.metadata.tracks} audioFile={this.state.audioFile} />
-            {/* <MetadataTable metadata={this.state.metadata} /> */}
+            <MetadataTable metadata={this.state.metadata} />
             <Footer />
             {/* <ErrorModal buttonLabel="Hello" className="" /> */}
           </Col>
